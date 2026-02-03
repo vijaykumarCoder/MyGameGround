@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
-  title: 'Gaming Portal',
+  title: 'My Game Ground',
   description: 'Your ultimate destination for online games',
 };
 

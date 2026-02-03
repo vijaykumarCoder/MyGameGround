@@ -63,9 +63,14 @@ export default function GameDetailPage() {
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 {game.title}
               </h1>
-              <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-                {game.description}
-              </p>
+              <div
+                  className="prose prose-gray text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto text-left"
+                  dangerouslySetInnerHTML={{ __html: game.description }}
+                />
+
+              {/* <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
+              dangerouslySetInnerHTML={{ __html: game.description }}
+              </p> */}
             </div>
           </div>
 

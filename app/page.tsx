@@ -17,7 +17,7 @@ export default function Home() {
             <div className="bg-white rounded-md overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
               <div className="relative w-full aspect-square overflow-hidden">
                 <img
-                  src={game.thumbnailheader}
+                  src={game.thumbnail}
                   alt={game.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
