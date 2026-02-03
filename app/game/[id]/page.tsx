@@ -1,154 +1,156 @@
 'use client';
 
 import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Play, X, Info, Share2, Star, ChevronRight } from 'lucide-react';
 import { gamesData } from '@/data/gamesData';
 
 export default function GameDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const gameId = params.id as string;
   const game = gamesData.find((g) => g.id === gameId);
   const [isPlaying, setIsPlaying] = useState(false);
 
   if (!game) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Game Not Found</h1>
-        <Link href="/" className="text-blue-600 hover:underline">
-          Return to Home
+      <div className="container mx-auto px-4 py-32 text-center">
+        <h1 className="text-4xl font-black text-gray-900 mb-4">404: LEVEL NOT FOUND</h1>
+        <Link href="/" className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-full font-bold hover:bg-blue-500 transition-all">
+          Back to Lobby
         </Link>
       </div>
     );
   }
 
-  const suggestedGames = gamesData.filter((g) => g.id !== gameId).slice(0, 4);
-
-  const handlePlayClick = () => {
-    setIsPlaying(true);
-  };
-
-  const handleClose = () => {
-    setIsPlaying(false);
-  };
+  const suggestedGames = gamesData.filter((g) => g.id !== gameId).slice(0, 6);
 
   return (
-    <>
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Game Preview Section */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
-            <div className="relative w-full aspect-video max-w-4xl mx-auto cursor-pointer group"
-                 onClick={handlePlayClick}>
+    <div className="min-h-screen bg-[#0f1115] text-gray-100">
+      {/* Breadcrumbs - Essential for SEO/AdSense */}
+      <nav className="container mx-auto px-4 py-4 flex items-center gap-2 text-xs font-medium text-gray-500">
+        <Link href="/" className="hover:text-blue-400">Home</Link>
+        <ChevronRight size={12} />
+        <span className="text-gray-300 line-clamp-1">{game.title}</span>
+      </nav>
+
+      <main className="container mx-auto px-4 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+          {/* LEFT: Game Content (8 Cols) */}
+          <div className="lg:col-span-8 space-y-8">
+
+            {/* Play Area Wrapper */}
+            <section className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black shadow-2xl ring-1 ring-white/10 group">
               <img
                 src={game.thumbnail}
                 alt={game.title}
-                className="w-full h-full object-cover group-hover:opacity-90 transition-opacity"
+                className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 group-hover:bg-opacity-40 transition-all">
-                <div className="bg-white rounded-full p-4 md:p-6 shadow-xl transform group-hover:scale-110 transition-transform">
-                  <svg
-                    className="w-12 h-12 md:w-16 md:h-16 text-gray-900"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                  </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-t from-black/80 via-transparent to-transparent">
+                <button
+                  onClick={() => setIsPlaying(true)}
+                  className="group/btn flex items-center gap-4 bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all hover:scale-105"
+                >
+                  <Play fill="white" size={24} />
+                  <span className="text-xl font-black tracking-tighter uppercase">Play Now</span>
+                </button>
+                <p className="mt-4 text-sm font-medium text-gray-400">Full Screen Supported</p>
+              </div>
+            </section>
+
+            {/* Game Info Card */}
+            <div className="bg-[#1a1d23] rounded-2xl p-6 md:p-8 border border-white/5 shadow-xl">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <h1 className="text-3xl md:text-4xl font-black text-white">{game.title}</h1>
+                <div className="flex gap-2">
+                  <button className="p-3 bg-white/5 rounded-xl hover:bg-white/10 transition-colors"><Share2 size={20} /></button>
+                  <button className="flex items-center gap-2 bg-yellow-500/10 text-yellow-500 px-4 py-2 rounded-xl border border-yellow-500/20">
+                    <Star size={18} fill="currentColor" />
+                    <span className="font-bold">4.9</span>
+                  </button>
                 </div>
               </div>
-            </div>
-            <div className="p-6 text-center">
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                {game.title}
-              </h1>
+
+              {/* Tags/Categories */}
+              <div className="flex flex-wrap gap-2 mb-8">
+                {['Action', 'Multiplayer', 'Web Games'].map(tag => (
+                  <span key={tag} className="text-[10px] font-bold uppercase tracking-widest bg-blue-600/10 text-blue-400 px-3 py-1 rounded-full border border-blue-600/20">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
               <div
-                  className="prose prose-gray text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto text-left"
-                  dangerouslySetInnerHTML={{ __html: game.description }}
-                />
-
-              {/* <p className="text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-              dangerouslySetInnerHTML={{ __html: game.description }}
-              </p> */}
+                className="prose prose-invert prose-blue max-w-none text-gray-400 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: game.description }}
+              />
             </div>
+
+            {/* Suggested Section (Mobile/Bottom) */}
+            <section>
+              <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                <div className="w-1 h-6 bg-blue-600 rounded-full" />
+                More Games You'll Love
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {suggestedGames.map((g) => (
+                  <Link key={g.id} href={`/game/${g.id}`} className="group block">
+                    <div className="relative aspect-square rounded-xl overflow-hidden mb-2 bg-gray-800">
+                      <img src={g.thumbnail} alt={g.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    </div>
+                    <h3 className="text-sm font-bold line-clamp-1 group-hover:text-blue-400 transition-colors">{g.title}</h3>
+                  </Link>
+                ))}
+              </div>
+            </section>
           </div>
 
-          {/* Suggested Games Section */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Suggested Games</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {suggestedGames.map((suggestedGame) => (
-                <Link
-                  key={suggestedGame.id}
-                  href={`/game/${suggestedGame.id}`}
-                  className="group"
-                >
-                  <div className="bg-white rounded-md overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <div className="relative w-full aspect-square overflow-hidden">
-                      <img
-                        src={suggestedGame.thumbnail}
-                        alt={suggestedGame.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                    <div className="p-3">
-                      <h3 className="text-sm font-semibold text-gray-900 line-clamp-2">
-                        {suggestedGame.title}
-                      </h3>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+          {/* RIGHT: Sidebar (4 Cols) - AdSense Goldmine */}
+          <aside className="lg:col-span-4 space-y-6">
+            <div className="bg-[#1a1d23] border border-white/5 rounded-2xl p-6 sticky top-24">
+              <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <Info size={16} /> Sponsored Content
+              </h3>
+              {/* Ad Unit Placeholder */}
+              <div className="aspect-[300/600] w-full bg-gray-900 rounded-xl flex flex-col items-center justify-center border border-dashed border-gray-700 text-gray-600">
+                <p className="text-[10px] uppercase font-bold italic mb-2">Advertisement</p>
+                <div className="w-12 h-12 border-2 border-gray-800 rounded-full animate-pulse" />
+              </div>
+
+              <div className="mt-8 space-y-4">
+                <h3 className="text-sm font-bold text-white uppercase tracking-widest">How to Play</h3>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Use your **Arrow Keys** or **WASD** to navigate. Press **Space** to jump. This game is optimized for high-performance browsers.
+                </p>
+              </div>
             </div>
-          </div>
+          </aside>
         </div>
-      </div>
+      </main>
 
-      {/* Fullscreen Game Iframe */}
+      {/* Fullscreen Player Modal */}
       <AnimatePresence>
         {isPlaying && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-[#0b0c10]"
           >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="relative w-full h-full"
-            >
-              <iframe
-                src={game.gameUrl}
-                className="w-full h-full border-0"
-                allow="autoplay; fullscreen"
-                allowFullScreen
-              />
-              <button
-                onClick={handleClose}
-                className="absolute top-4 right-4 bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-900 rounded-full p-3 shadow-lg transition-all hover:scale-110 z-10"
-                aria-label="Close game"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </motion.div>
+            <div className="flex flex-col h-full">
+              <div className="h-14 bg-gray-900 flex items-center justify-between px-6 border-b border-white/10">
+                <h2 className="font-bold text-sm uppercase tracking-widest">{game.title}</h2>
+                <button onClick={() => setIsPlaying(false)} className="flex items-center gap-2 bg-red-500/10 text-red-500 px-4 py-1.5 rounded-lg text-xs font-black uppercase hover:bg-red-500 hover:text-white transition-all">
+                  <X size={16} /> Exit Theater
+                </button>
+              </div>
+              <div className="flex-grow bg-black">
+                <iframe src={game.gameUrl} className="w-full h-full border-0" allow="autoplay; fullscreen" allowFullScreen />
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
