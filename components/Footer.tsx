@@ -1,5 +1,12 @@
 import Link from 'next/link';
 
+const quickLinks = [
+  { href: '/about-us', label: 'About Us' },
+  { href: '/privacy-policy', label: 'Privacy Policy' },
+  { href: '/terms-of-service', label: 'Terms of Service' },
+  { href: '/contact-us', label: 'Contact Us' },
+];
+
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-white mt-auto">
@@ -8,25 +15,19 @@ export default function Footer() {
           <div className="text-sm text-gray-400">
             © {new Date().getFullYear()} Gaming Portal. All rights reserved.
           </div>
-          <nav className="flex space-x-6">
-            <Link 
-              href="/about" 
-              className="text-gray-400 hover:text-white transition-colors text-sm"
-            >
-              About
-            </Link>
-            <Link 
-              href="/privacy" 
-              className="text-gray-400 hover:text-white transition-colors text-sm"
-            >
-              Privacy Policy
-            </Link>
-            <Link 
-              href="/terms" 
-              className="text-gray-400 hover:text-white transition-colors text-sm"
-            >
-              Terms of Service
-            </Link>
+          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2" aria-label="Quick links">
+            <span className="sr-only md:not-sr-only md:mr-2 md:inline text-gray-500 text-sm font-medium">
+              Quick Links
+            </span>
+            {quickLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-gray-400 hover:text-white transition-colors text-sm"
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
         </div>
       </div>
